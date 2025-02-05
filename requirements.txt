@@ -1,0 +1,10 @@
+fastapi[all]
+asyncpg
+SQLAlchemy
+requests
+pydantic
+alembic
+uvicorn
+python-jose
+bcrypt
+passlib[bcrypt]
