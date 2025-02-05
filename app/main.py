@@ -1,9 +1,23 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
+import uvicorn
 
-from app.users.router import router as router_users
+from database.database import create_models, delete_models
+from users.router import router as router_users
+from config import settings
 
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # await delete_models()
+    print("База очищена ")
+    await create_models()
+    print("База готова")
+    yield
+    print("Выключение")
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/")
@@ -12,3 +26,12 @@ def home_page():
 
 
 app.include_router(router_users)
+
+
+if __name__ == "__main__":
+    uvicorn.run(
+        "main:app",
+        host=settings.MAIN.HOST,
+        port=settings.MAIN.PORT,
+        reload=True,
+    )
