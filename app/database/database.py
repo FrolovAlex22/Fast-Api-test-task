@@ -64,11 +64,11 @@ async def get_db_session():
         yield session
 
 
-async def create_models():
+async def create_models() -> None:
     async with sessionmanager.engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
 
-async def delete_models():
+async def delete_models() -> None:
     async with sessionmanager.engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)

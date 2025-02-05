@@ -5,6 +5,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class AuthSettings(BaseModel):
     KEY: str
+    ALGORITHM: str
 
 
 class PostgresqlSettings(BaseModel):
@@ -38,3 +39,10 @@ def get_db_url():
         f"postgresql+asyncpg://{settings.DB.USER}:{settings.DB.PASSWORD}@"
         f"{settings.DB.HOST}:{settings.DB.PORT}/{settings.DB.NAME}"
     )
+
+
+def get_auth_data():
+    return {
+        "secret_key": settings.AUTH.KEY,
+        "algorithm": settings.AUTH.ALGORITHM
+    }

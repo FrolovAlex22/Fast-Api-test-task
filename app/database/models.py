@@ -28,3 +28,6 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(String(30), nullable=False)
     password_hash: Mapped[str] = mapped_column(String(70), nullable=False)
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(id={self.id})"
