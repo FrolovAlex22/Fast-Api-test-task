@@ -1,9 +1,12 @@
+import logging
 from passlib.context import CryptContext
 from jose import jwt
 from datetime import datetime, timedelta, timezone
 from users.dao import UsersDAO
-from config import get_auth_data
+from config.config import get_auth_data
 
+
+logger = logging.getLogger(__name__)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

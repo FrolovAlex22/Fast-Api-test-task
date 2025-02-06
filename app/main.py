@@ -1,20 +1,30 @@
 from contextlib import asynccontextmanager
+import logging.config
+
 from fastapi import FastAPI
 import uvicorn
 
 from database.database import create_models, delete_models
+from config.logging_settings import logging_config
 from users.router import router as router_users
-from config import settings
+from config.config import settings
+
+
+logging.config.dictConfig(logging_config)
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # await delete_models()
-    print("База очищена ")
+    logger.info("База очищена")
+    # print("База очищена ")
     await create_models()
-    print("База готова")
+    # print("База готова")
+    logger.info("База готова")
     yield
-    print("Выключение")
+    logger.info("Выключение")
+    # print("Выключение")
 
 
 app = FastAPI(lifespan=lifespan)

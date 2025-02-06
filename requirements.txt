@@ -2,9 +2,10 @@ fastapi[all]
 asyncpg
 SQLAlchemy
 requests
+python-dotenv
 pydantic
 alembic
 uvicorn
 python-jose
-bcrypt
+bcrypt==4.0.1
 passlib[bcrypt]

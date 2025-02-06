@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine
 )
 
-from config import get_db_url, settings
+from config.config import get_db_url, settings
 from database.models import Base
 
 

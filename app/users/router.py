@@ -1,9 +1,12 @@
+import logging
 from fastapi import APIRouter, HTTPException, Response, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from users.auth import authenticate_user, create_access_token, get_password_hash
 from users.dao import UsersDAO
 from users.schemas import UserAuth, UserRegister, UserResponse
 
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix='/auth', tags=['Auth'])
 
@@ -23,6 +26,7 @@ async def register_user(user_data: UserRegister) -> dict:
     user_dict = user_data.model_dump()
     user_dict['password_hash'] = get_password_hash(user_data.password_hash)
     user = await UsersDAO.add(user_dict)
+    logger.info(f'Пользователь {user.username} зарегистрирован')
     return user
 
 
@@ -38,4 +42,5 @@ async def auth_user(response: Response, user_data: UserAuth):
     response.set_cookie(
         key="users_access_token", value=access_token, httponly=True
     )
+    logger.info(f'Пользователь {check.username} авторизован')
     return {'access_token': access_token, 'refresh_token': None}
