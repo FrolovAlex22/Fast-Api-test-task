@@ -18,13 +18,10 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     # await delete_models()
     logger.info("База очищена")
-    # print("База очищена ")
     await create_models()
-    # print("База готова")
     logger.info("База готова")
     yield
     logger.info("Выключение")
-    # print("Выключение")
 
 
 app = FastAPI(lifespan=lifespan)

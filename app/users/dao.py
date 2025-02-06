@@ -1,4 +1,3 @@
-from sqlalchemy import select
 from dao.base import BaseDAO
 from database.database import sessionmanager
 from database.models import User

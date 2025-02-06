@@ -3,7 +3,7 @@ from passlib.context import CryptContext
 from jose import jwt
 from datetime import datetime, timedelta, timezone
 from users.dao import UsersDAO
-from config.config import get_auth_data
+from config.config import TOKEN_LIFETIME, get_auth_data
 
 
 logger = logging.getLogger(__name__)
@@ -21,11 +21,11 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(days=30)
+    expire = datetime.now(timezone.utc) + timedelta(days=TOKEN_LIFETIME)
     to_encode.update({"exp": expire})
     auth_data = get_auth_data()
     encode_jwt = jwt.encode(
-        to_encode, auth_data['secret_key'], algorithm=auth_data['algorithm']
+        to_encode, auth_data["secret_key"], algorithm=auth_data["algorithm"]
     )
     return encode_jwt
 

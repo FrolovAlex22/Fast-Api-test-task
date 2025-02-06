@@ -13,4 +13,4 @@ class ErrorLogFilter(logging.Filter):
 
 class WarningCriticalLogFilter(logging.Filter):
     def filter(self, record):
-        return record.levelname in ("WARNING", 'CRITICAL')
+        return record.levelname in ("WARNING", "CRITICAL")

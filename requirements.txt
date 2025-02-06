@@ -9,3 +9,7 @@ uvicorn
 python-jose
 bcrypt==4.0.1
 passlib[bcrypt]
+beautifulsoup4
+lxml
+selenium
+webdriver_manager

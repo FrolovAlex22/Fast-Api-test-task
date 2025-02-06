@@ -1,7 +1,8 @@
 import sys
 
-from config.log_filters import DebugInfoLogFilter, WarningCriticalLogFilter, ErrorLogFilter
-
+from config.log_filters import (
+    DebugInfoLogFilter, WarningCriticalLogFilter, ErrorLogFilter
+)
 
 logging_config = {
     "version": 1,

@@ -1,9 +1,6 @@
 from datetime import datetime
-from enum import Enum as PyEnum
 
 from sqlalchemy import (
-    Enum,
-    ForeignKey,
     String,
     func,
 )

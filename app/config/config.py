@@ -3,6 +3,9 @@ from pydantic import BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+TOKEN_LIFETIME = 30
+
+
 class AuthSettings(BaseModel):
     KEY: str
     ALGORITHM: str
@@ -19,6 +22,7 @@ class PostgresqlSettings(BaseModel):
 class MainSettings(BaseModel):
     HOST: str
     PORT: int
+
 
 class Settings(BaseSettings):
     AUTH: AuthSettings
