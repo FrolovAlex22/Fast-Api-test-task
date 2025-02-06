@@ -68,7 +68,7 @@ async def logout_user(response: Response):
     )
 async def find_item_by_id(
     item_id: str, user: User = Depends(get_current_user)
-):
+):  # Для поиска по id можно использовать номер id = 145808
     """Поиск продукта по id"""
     result = await parsing_response_by_id(item_id)
     logger.info(f"{user.username} проверил товар по id. результат: {result}")
