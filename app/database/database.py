@@ -59,11 +59,6 @@ class DatabaseSessionManager:
 sessionmanager = DatabaseSessionManager(url=get_db_url(), echo=False)
 
 
-async def get_db_session():
-    async with sessionmanager.session() as session:
-        yield session
-
-
 async def create_models() -> None:
     async with sessionmanager.engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)

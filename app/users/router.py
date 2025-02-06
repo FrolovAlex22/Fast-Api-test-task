@@ -1,15 +1,18 @@
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, HTTPException, Response, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from database.database import get_db_session
-from users.auth import get_password_hash
+from users.auth import authenticate_user, create_access_token, get_password_hash
 from users.dao import UsersDAO
-from users.schemas import UserRegister
+from users.schemas import UserAuth, UserRegister, UserResponse
 
 
 router = APIRouter(prefix='/auth', tags=['Auth'])
 
 
-@router.post("/register/")
+@router.post(
+        "/register/",
+        status_code=status.HTTP_201_CREATED,
+        response_model=UserResponse
+    )
 async def register_user(user_data: UserRegister) -> dict:
     user = await UsersDAO.find_one_or_none_by_name(username=user_data.username)
     if user:
@@ -19,5 +22,20 @@ async def register_user(user_data: UserRegister) -> dict:
         )
     user_dict = user_data.model_dump()
     user_dict['password_hash'] = get_password_hash(user_data.password_hash)
-    await UsersDAO.add(user_dict)
-    return {'message': 'Вы успешно зарегистрированы!'}
+    user = await UsersDAO.add(user_dict)
+    return user
+
+
+@router.post("/login/")
+async def auth_user(response: Response, user_data: UserAuth):
+    check = await authenticate_user(
+        username=user_data.username, password=user_data.password
+    )
+    if check is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail='Неверные имя пользователя или пароль')
+    access_token = create_access_token({"sub": str(check.id)})
+    response.set_cookie(
+        key="users_access_token", value=access_token, httponly=True
+    )
+    return {'access_token': access_token, 'refresh_token': None}

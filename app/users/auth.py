@@ -1,6 +1,7 @@
 from passlib.context import CryptContext
 from jose import jwt
 from datetime import datetime, timedelta, timezone
+from users.dao import UsersDAO
 from config import get_auth_data
 
 
@@ -24,3 +25,12 @@ def create_access_token(data: dict) -> str:
         to_encode, auth_data['secret_key'], algorithm=auth_data['algorithm']
     )
     return encode_jwt
+
+
+async def authenticate_user(username: str, password: str):
+    user = await UsersDAO.find_one_or_none_by_name(username=username)
+    if not user or verify_password(
+        plain_password=password, hashed_password=user.password_hash
+    ) is False:
+        return None
+    return user
