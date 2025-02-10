@@ -28,3 +28,14 @@ class User(Base):
 
     def __repr__(self):
         return f"{self.__class__.__name__}(id={self.id})"
+
+
+class Asset(Base):
+    __tablename__ = "asset"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(50), nullable=False)
+    description: Mapped[str] = mapped_column(String(150), nullable=False)
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(id={self.id})"

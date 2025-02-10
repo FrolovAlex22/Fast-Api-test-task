@@ -1,5 +1,8 @@
 import logging
+
 from fastapi import APIRouter, HTTPException, Response, status, Depends
+
+from assets.dao import AssetsDAO
 from users.dependencies import get_current_user
 from database.models import User
 from utils.parsing import parsing_response_by_id, parsing_response_free
@@ -14,7 +17,32 @@ from users.schemas import UserAuth, UserRegister, UserResponse
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/auth", tags=["Auth"])
+router = APIRouter(prefix="/user", tags=["Auth"])
+
+
+MOC_DICT = {
+    "product0": {
+        "id": "146014",
+        "itemId": "276817186914",
+        "title": "продукт",
+        "description": "описание продукта1",
+        "price": 100,
+    },
+    "product1": {
+        "id": "146015",
+        "itemId": "276817186914",
+        "title": "продукт2",
+        "description": "описание продукта2",
+        "price": 200,
+    },
+    "product2": {
+        "id": "146016",
+        "itemId": "276817186914",
+        "title": "продукт3",
+        "description": "описание продукта3",
+        "price": 300,
+    }
+}
 
 
 @router.post(
@@ -72,6 +100,11 @@ async def find_item_by_id(
     """Поиск продукта по id"""
     result = await parsing_response_by_id(item_id)
     logger.info(f"{user.username} проверил товар по id. результат: {result}")
+    try:
+        rest = await AssetsDAO.add_one(result)
+        logger.info(f"{user.username} добавил актив: {rest.title} в базу")
+    except Exception as e:
+        logger.info(f"При добавлении актива произошла ошибка: {e}")
     return {"result": result}
 
 
@@ -85,7 +118,18 @@ async def find_free_items(user: User = Depends(get_current_user)):  # Не см�
     logger.info(
         f"Пользователь {user.username} проверил бесплатные товары, "
         f"результат: {result}")
+    try:
+        var_list = []
+        for key, value in MOC_DICT.items():
+            var_list.append([value["title"], value["description"]])
+        await AssetsDAO.add_many(var_list)
+        count = len(var_list)
+        logger.info(f"{user.username} добавил {count} актива в базу")
+
+        return { "added": count }
+    except Exception as e:
+        logger.info(f"При добавлении актива произошла ошибка: {e}")
+
     return {
-        "message": "К сожалению, не смог реализовать парсинг free товаров",
         "result_title": result
     }

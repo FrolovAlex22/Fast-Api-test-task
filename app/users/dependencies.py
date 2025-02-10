@@ -1,6 +1,8 @@
+from datetime import datetime, timezone
+
 from fastapi import Depends, HTTPException, Request, status
 from jose import JWTError, jwt
-from datetime import datetime, timezone
+
 from users.dao import UsersDAO
 from config.config import get_auth_data
 
